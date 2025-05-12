@@ -5,7 +5,6 @@ from aiogram.filters import Command
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import CallbackQuery
 from dotenv import load_dotenv
-import aiohttp.web
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -93,18 +92,6 @@ async def start(message: Message):
     ])
     await message.answer("📰 Hello there! Choose the subreddit:", reply_markup=keyboard)
 
-# Dummy HTTP сервер (нужен для работы render.com, потом можно удалить)
-async def dummy_handler(request):
-    return aiohttp.web.Response(text="OK", status=200)
-
-async def on_startup():
-    app = aiohttp.web.Application()
-    app.add_routes([aiohttp.web.get("/", dummy_handler)])
-    runner = aiohttp.web.AppRunner(app)
-    await runner.setup()
-    site = aiohttp.web.TCPSite(runner, "0.0.0.0", 8000)
-    await site.start()
-
 # Обработка нажатий на категории
 @dp.callback_query(F.data.startswith("rss_"))
 async def send_news(callback: CallbackQuery):
@@ -139,5 +126,4 @@ if __name__ == "__main__":
     import requests
 
     print("Бот запущен...")
-    asyncio.run(on_startup())
     dp.run_polling(bot)
