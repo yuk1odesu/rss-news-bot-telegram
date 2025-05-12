@@ -25,11 +25,11 @@ dp = Dispatcher()
 
 # Категории новостей
 CATEGORIES = {
-    "general": "🌍 Общие",
-    "technology": "🧩 Технологии",
-    "sports": "⚽ Спорт",
-    "health": "🩺 Здоровье",
-    "entertainment": "🎬 Развлечения"
+    "general": "🌍 World news",
+    "technology": "🧩 Technology",
+    "sports": "⚽ Sports",
+    "health": "🩺 Health",
+    "entertainment": "🎬 Gaming"
 }
 
 # Функция получения новостей
@@ -78,8 +78,8 @@ def get_rss_news(category="general"):
 # Функция создания клавиатуры с кнопками "Обновить" и "Выбрать другую категорию"
 def get_news_keyboard(category):
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔄 Обновить", callback_data=f"rss_{category}")],
-        [InlineKeyboardButton(text="⬅️ Выбрать другую категорию", callback_data="back_to_categories")]
+        [InlineKeyboardButton(text="🔄 Update feed", callback_data=f"rss_{category}")],
+        [InlineKeyboardButton(text="⬅️ Choose another subreddit", callback_data="back_to_categories")]
     ])
 
 
@@ -90,7 +90,7 @@ async def start(message: Message):
         [InlineKeyboardButton(text=name, callback_data=f"rss_{topic}")]
         for topic, name in CATEGORIES.items()
     ])
-    await message.answer("📰 Добро пожаловать! Выберите категорию:", reply_markup=keyboard)
+    await message.answer("📰 Hello there! Choose the subreddit:", reply_markup=keyboard)
 
 
 # Обработка нажатий на категории
@@ -100,7 +100,7 @@ async def send_news(callback: CallbackQuery):
     news_list = get_rss_news(category)
 
     if not news_list:
-        await callback.message.answer("❌ Не удалось загрузить новости.")
+        await callback.message.answer("❌ Unable to load the news.")
         return
 
     result = f"🗞 Новости по теме «{CATEGORIES[category]}»:\n\n"
@@ -118,7 +118,7 @@ async def back_to_categories(callback: CallbackQuery):
         [InlineKeyboardButton(text=name, callback_data=f"rss_{topic}")]
         for topic, name in CATEGORIES.items()
     ])
-    await callback.message.edit_text("📰 Выберите категорию:", reply_markup=keyboard)
+    await callback.message.edit_text("📰 Choose your subreddit:", reply_markup=keyboard)
 
 
 # Запуск бота
